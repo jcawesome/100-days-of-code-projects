@@ -2,7 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ef99c8b-d31f-45d7-b2dd-4e50f5acc6a6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/hello.py" beforeDir="false" afterPath="$PROJECT_DIR$/hello.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/img/about-bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/img/contact-bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/img/home-bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/img/laptop_bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/img/laptop_ctr_bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/img/nasa-bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/img/post-bg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/assets/img/post-sample-image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/css/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/static/js/scripts.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/templates/about.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/templates/contact.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/templates/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/templates/header.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/api/templates/post.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../capstone-blog-project/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../capstone-blog-project/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +44,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/Jancarlo/Documents/GitHub/100-days-of-code-projects/100-days-of-code-python/Web-Development-with-Flask/higher-lower",
+    "last_opened_file_path": "C:/Users/Jancarlo/Documents/GitHub/100-days-of-code-projects/100-days-of-code-python/Web-Development-with-Flask/capstone-blog-project",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
