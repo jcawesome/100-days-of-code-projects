@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap5
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -86,8 +86,6 @@ def find_movie():
     movie_api_id = request.args.get("id")
     if movie_api_id:
         movie_api_url = f"{MOVIE_DB_INFO_URL}/{movie_api_id}"
-        # The language parameter is optional, if you were making the website for a different audience
-        # e.g. Hindi speakers then you might choose "hi-IN"
         response = requests.get(movie_api_url, params={"api_key": MOVIE_DB_API_KEY, "language": "en-US"})
         data = response.json()
         movie_ins = (supabase.table("movie")
@@ -98,8 +96,6 @@ def find_movie():
                              }
                             )
                     .execute())
-        print(movie_ins.data[0])
-        print(movie_ins.data[0]["id"])
         return redirect(url_for("rate_movie", id=int(movie_ins.data[0]["id"])))
 
 
