@@ -6,23 +6,40 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 import requests
 import os
-from supabase import create_client, Client
 
 MOVIE_DB_API_KEY = os.environ.get('MOVIE_DB_API_KEY')
 MOVIE_DB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
 MOVIE_DB_INFO_URL = "https://api.themoviedb.org/3/movie"
 MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/w500"
 
-SUPABASE_URL: str = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY: str = os.environ.get("SUPABASE_KEY")
-
-# define supabase client
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+# create the extension
+db = SQLAlchemy()
 
 # create the app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap5(app)
+
+# configure the SQLite database, relative to the app instance folder
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///top-x-collection.db"
+# initialize the app with the extension
+db.init_app(app)
+
+
+# CREATE TABLE
+class Movie(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), unique=True, nullable=False)
+    year = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.String(500), nullable=False)
+    rating = db.Column(db.Float, nullable=True)
+    ranking = db.Column(db.Integer, nullable=True)
+    review = db.Column(db.String(250), nullable=True)
+    img_url = db.Column(db.String(250), nullable=False)
+
+
+with app.app_context():
+    db.create_all()
 
 
 class RateMovieForm(FlaskForm):
@@ -38,14 +55,13 @@ class FindMovieForm(FlaskForm):
 
 @app.route("/")
 def home():
-    result = supabase.table("movie").select("*").order("rating", desc=False).limit(10).execute()
-
-    all_movies = result.data  # convert ScalarResult to Python List
-    print(all_movies)
+    result = db.session.execute(db.select(Movie).order_by(Movie.rating))
+    all_movies = result.scalars().all() # convert ScalarResult to Python List
 
     for i in range(len(all_movies)):
-        all_movies[i]["ranking"] = len(all_movies) - i
-    supabase.table("movie").upsert(all_movies).execute()
+        all_movies[i].ranking = len(all_movies) - i
+    db.session.commit()
+
     return render_template("index.html", movies=all_movies)
 
 
@@ -66,18 +82,21 @@ def add_movie():
 def rate_movie():
     form = RateMovieForm()
     movie_id = request.args.get("id")
-    movie = supabase.table("movie").select("*").eq('id', movie_id).execute()
+    movie = db.get_or_404(Movie, movie_id)
     if form.validate_on_submit():
-        supabase.table("movie").update({'rating': float(form.rating.data)}).eq('id', movie_id).execute()
-        supabase.table("movie").update({'review': str(form.review.data)}).eq('id', movie_id).execute()
+        movie.rating = float(form.rating.data)
+        movie.review = form.review.data
+        db.session.commit()
         return redirect(url_for('home'))
-    return render_template("edit.html", movie=movie.data, form=form)
+    return render_template("edit.html", movie=movie, form=form)
 
 
 @app.route("/delete")
 def delete_movie():
     movie_id = request.args.get("id")
-    supabase.table("movie").delete().eq('id', movie_id).execute()
+    movie = db.get_or_404(Movie, movie_id)
+    db.session.delete(movie)
+    db.session.commit()
     return redirect(url_for("home"))
 
 
@@ -86,21 +105,19 @@ def find_movie():
     movie_api_id = request.args.get("id")
     if movie_api_id:
         movie_api_url = f"{MOVIE_DB_INFO_URL}/{movie_api_id}"
-        # The language parameter is optional, if you were making the website for a different audience
-        # e.g. Hindi speakers then you might choose "hi-IN"
+        #The language parameter is optional, if you were making the website for a different audience
+        #e.g. Hindi speakers then you might choose "hi-IN"
         response = requests.get(movie_api_url, params={"api_key": MOVIE_DB_API_KEY, "language": "en-US"})
         data = response.json()
-        movie_ins = (supabase.table("movie")
-                    .insert({"title": data["title"],
-                             "year": data["release_date"].split("-")[0],
-                             "img_url": f"{MOVIE_DB_IMAGE_URL}{data['poster_path']}",
-                             "description": data["overview"]
-                             }
-                            )
-                    .execute())
-        print(movie_ins.data[0])
-        print(movie_ins.data[0]["id"])
-        return redirect(url_for("rate_movie", id=int(movie_ins.data[0]["id"])))
+        new_movie = Movie(
+            title=data["title"],
+            year=data["release_date"].split("-")[0],
+            img_url=f"{MOVIE_DB_IMAGE_URL}{data['poster_path']}",
+            description=data["overview"]
+        )
+        db.session.add(new_movie)
+        db.session.commit()
+        return redirect(url_for("rate_movie", id=new_movie.id))
 
 
 if __name__ == '__main__':
